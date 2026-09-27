@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle: Admin Dashboard</title>
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --panel-bg: #1e2436;
+      --card-bg: #272d40;
+      --text-main: #ffffff;
+      --text-muted: #8b99b5;
+      --border-color: #333d59;
+      --accent-blue: #3498db;
+      --accent-green: #2ecc71;
+      --accent-red: #e74c3c;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .header h2 {
+      margin: 5px 0 0 0;
+      font-size: 1.5rem;
+      color: #e056fd;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      background-color: var(--panel-bg);
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 1200px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .section {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .section h3 {
+      margin-top: 0;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .section h3 span {
+      background-color: #d35400;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .team-item {
+      background-color: #1e2436;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .team-item .title-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .team-item .inputs-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .team-item label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      background-color: #0d1117;
+      border: 1px solid var(--border-color);
+      color: white;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .points-control {
+      display: flex;
+      align-items: center;
+    }
+
+    .points-control button {
+      background-color: #333d59;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+
+    .points-control input {
+      text-align: center;
+      width: calc(100% - 60px);
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .btn-blue { background-color: var(--accent-blue); }
+    .btn-green { background-color: var(--accent-green); }
+    .btn-red { background-color: var(--accent-red); }
+    .btn-icon { width: auto; padding: 5px 10px; }
+
+    .flex-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .setting-item {
+      margin-bottom: 15px;
+    }
+
+    .setting-item label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .mini-leaderboard {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 10px;
+      height: 200px;
+      margin-bottom: 20px;
+    }
+
+    .mini-card {
+      width: 80px;
+      border-radius: 8px;
+      text-align: center;
+      padding: 10px 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mini-rank-1 { height: 160px; background: linear-gradient(180deg, #1e3c72, #2a5298); border: 2px solid #f1c40f; }
+    .mini-rank-2 { height: 130px; background: linear-gradient(180deg, #c0392b, #8e44ad); border: 1px solid #e74c3c; }
+    .mini-rank-3 { height: 110px; background: linear-gradient(180deg, #27ae60, #16a085); border: 1px solid #2ecc71; }
+
+    .mini-card .icon { font-size: 24px; margin-bottom: 5px; }
+    .mini-card .name { font-size: 10px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; word-break: break-all; }
+    .mini-card .points { font-size: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>QUIZ BATTLE: ADMIN DASHBOARD</h1>
+    <h2>TEAM & GAME MANAGEMENT</h2>
+  </div>
+
+  <div class="dashboard">
+    <!-- Section 1: Manage Teams -->
+    <div class="section">
+      <h3><span>1</span> MANAGE TEAMS</h3>
+      <div id="teams-list"></div>
+
+      <div class="flex-buttons" style="margin-top: 15px;">
+        <button class="btn btn-blue" onclick="addTeam()">+ Add Team</button>
+        <button class="btn btn-green" onclick="saveAllTeams()">Save Team Changes</button>
+      </div>
+    </div>
+
+    <!-- Section 2: Game Settings -->
+    <div class="section">
+      <h3><span>2</span> GAME SETTINGS</h3>
+      <div class="setting-item">
+        <label>Game Title</label>
+        <input type="text" id="setting-title" onchange="updateSettings()">
+      </div>
+      <div class="setting-item">
+        <label>Number of Teams</label>
+        <input type="range" id="setting-num-teams" min="1" max="10" onchange="updateSettings()">
+      </div>
+      <div class="setting-item">
+        <label>Questions Per Round</label>
+        <input type="range" id="setting-questions" min="1" max="20" onchange="updateSettings()">
+      </div>
+      <div class="setting-item">
+        <label>Timer Duration</label>
+        <input type="range" id="setting-timer" min="10" max="120" onchange="updateSettings()">
+      </div>
+    </div>
+
+    <!-- Section 3: Current Game Status -->
+    <div class="section">
+      <h3><span>3</span> CURRENT GAME STATUS</h3>
+      <div class="mini-leaderboard" id="mini-leaderboard">
+        <!-- Rendered via JS -->
+      </div>
+
+      <button class="btn btn-red" onclick="resetScores()">Reset Game Scores</button>
+      <button class="btn btn-blue">Start Next Round</button>
+      <button class="btn btn-red">End Quiz & Publish Results</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let currentState = null;
+
+    // UI Elements
+    const teamsListEl = document.getElementById('teams-list');
+    const miniLeaderboardEl = document.getElementById('mini-leaderboard');
+    const settingTitleEl = document.getElementById('setting-title');
+
+    socket.on('state_update', (state) => {
+      currentState = state;
+      renderAdminTeams(state.teams);
+      renderMiniLeaderboard(state.teams);
+
+      // Update settings if not focused (preventing overwrite while typing)
+      if (document.activeElement !== settingTitleEl) {
+        settingTitleEl.value = state.settings.gameTitle;
+      }
+    });
+
+    function renderAdminTeams(teams) {
+      teamsListEl.innerHTML = '';
+      teams.forEach(team => {
+        const item = document.createElement('div');
+        item.className = 'team-item';
+        item.innerHTML = `
+          <div class="title-row">
+            <span>${team.name}</span>
+            <button class="btn-red btn-icon" onclick="deleteTeam('${team.id}')">🗑️</button>
+          </div>
+          <div class="inputs-row">
+            <div>
+              <label>Team Name</label>
+              <input type="text" id="name-${team.id}" value="${team.name}">
+            </div>
+            <div>
+              <label>Icon</label>
+              <select id="icon-${team.id}">
+                <option value="🛡️" ${team.icon === '🛡️' ? 'selected' : ''}>🛡️ Shield</option>
+                <option value="💡" ${team.icon === '💡' ? 'selected' : ''}>💡 Lightbulb</option>
+                <option value="🚀" ${team.icon === '🚀' ? 'selected' : ''}>🚀 Rocket</option>
+                <option value="⭐" ${team.icon === '⭐' ? 'selected' : ''}>⭐ Star</option>
+                <option value="🔥" ${team.icon === '🔥' ? 'selected' : ''}>🔥 Fire</option>
+              </select>
+            </div>
+            <div>
+              <label>Points</label>
+              <div class="points-control">
+                <button onclick="adjustPoints('${team.id}', -10)">-</button>
+                <input type="number" id="points-${team.id}" value="${team.points}">
+                <button onclick="adjustPoints('${team.id}', 10)">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+        teamsListEl.appendChild(item);
+      });
+    }
+
+    function renderMiniLeaderboard(teams) {
+      miniLeaderboardEl.innerHTML = '';
+      const sortedTeams = [...teams].sort((a, b) => b.points - a.points);
+      if (sortedTeams.length === 0) return;
+
+      let visualOrder = [];
+      if (sortedTeams.length >= 3) {
+        visualOrder = [
+          { ...sortedTeams[1], rankClass: 'mini-rank-2' },
+          { ...sortedTeams[0], rankClass: 'mini-rank-1' },
+          { ...sortedTeams[2], rankClass: 'mini-rank-3' }
+        ];
+      } else if (sortedTeams.length === 2) {
+        visualOrder = [
+          { ...sortedTeams[1], rankClass: 'mini-rank-2' },
+          { ...sortedTeams[0], rankClass: 'mini-rank-1' }
+        ];
+      } else {
+        visualOrder = [
+          { ...sortedTeams[0], rankClass: 'mini-rank-1' }
+        ];
+      }
+
+      visualOrder.forEach(team => {
+        const card = document.createElement('div');
+        card.className = `mini-card ${team.rankClass}`;
+        card.innerHTML = `
+          <div class="icon">${team.icon}</div>
+          <div class="name">${team.name}</div>
+          <div class="points">${team.points}</div>
+        `;
+        miniLeaderboardEl.appendChild(card);
+      });
+    }
+
+    // Actions
+    function addTeam() {
+      socket.emit('add_team', {
+        name: 'New Team',
+        icon: '⭐',
+        points: 0
+      });
+    }
+
+    function deleteTeam(id) {
+      socket.emit('delete_team', id);
+    }
+
+    function adjustPoints(id, amount) {
+      const input = document.getElementById(`points-${id}`);
+      let newVal = parseInt(input.value) + amount;
+      input.value = newVal;
+      saveTeam(id);
+    }
+
+    function saveTeam(id) {
+      const name = document.getElementById(`name-${id}`).value;
+      const icon = document.getElementById(`icon-${id}`).value;
+      const points = parseInt(document.getElementById(`points-${id}`).value);
+
+      socket.emit('update_team', { id, name, icon, points });
+    }
+
+    function saveAllTeams() {
+      if (!currentState) return;
+      currentState.teams.forEach(team => {
+        saveTeam(team.id);
+      });
+    }
+
+    function resetScores() {
+      if(confirm('Are you sure you want to reset all scores to 0?')) {
+        socket.emit('reset_scores');
+      }
+    }
+
+    function updateSettings() {
+      const title = document.getElementById('setting-title').value;
+      socket.emit('update_settings', { gameTitle: title });
+    }
+  </script>
+</body>
+</html>
